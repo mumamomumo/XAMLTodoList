@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TodoListAppThingButItDoesntWork.MainPage"
+             xmlns:viewmodel="clr-namespace:TodoListAppThingButItDoesntWork.ViewModel"
+             x:DataType="viewmodel:MainViewModel">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+        
+        <Image Source="dotnet_bot.png" Grid.ColumnSpan="2"/>
+
+        <Entry Text="{Binding Text}"
+               Grid.Row="1"/>
+        
+        <Button Text="Add Task"
+                Command="{Binding AddTaskCommand}"
+                Grid.Column="2"
+                Grid.Row="1"/>
+
+        <Frame BackgroundColor="BlanchedAlmond"
+               Grid.Row="2" 
+                            Grid.ColumnSpan="2">
+            <CollectionView 
+                            ItemsSource="{Binding Tasks}">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type viewmodel:TaskItem}">
+                        <Frame BackgroundColor="Transparent"
+                               >
+                            <Grid ColumnDefinitions="0.5*, 3*, 1*">
+                                <CheckBox Color="Black" 
+                                          x:Name="TaskCheckBox"
+                                          IsChecked="{Binding IsChecked}"/>
+                                <Frame Grid.Column="1"
+                                       BackgroundColor="Beige">
+                                    <Label Text="{Binding TaskName}" 
+                                       Background="Beige" 
+                                       Grid.Column="1"
+                                       FontSize="20"
+                                       TextColor="Black"/>
+                                </Frame>
+                                <Button Text="Delete Task"
+                                        IsEnabled="False"
+                                        Grid.Column="2"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=RemoveTaskCommand}"
+                                        CommandParameter="{Binding .}">
+                                    <Button.Triggers>
+                                        <DataTrigger TargetType="Button" 
+                                                      Binding="{Binding Source={RelativeSource AncestorType={x:Type Grid}}, Path=Children[0].IsChecked}" 
+                                                      Value="True"
+                                                     >
+                                            <Setter Property="IsEnabled" 
+                                                    Value="True"/>
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                            </Grid>
+                        </Frame>
+                        
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
+
+    </Grid>
+
+</ContentPage>
